@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Scaffold(body: Subtask1()),
+      home: const Scaffold(body: Subtask2()),
     );
   }
 }
@@ -68,5 +68,16 @@ class Subtask1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: MyCard());
+  }
+}
+
+class Subtask2 extends StatelessWidget {
+  const Subtask2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: MyCard(label: 'Привіт Flutter!', colorStar: Colors.yellow),
+    );
   }
 }
