@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Scaffold(body: Subtask2()),
+      home: const Scaffold(body: Subtask3()),
     );
   }
 }
@@ -78,6 +78,34 @@ class Subtask2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: MyCard(label: 'Привіт Flutter!', colorStar: Colors.yellow),
+    );
+  }
+}
+
+class Subtask3 extends StatelessWidget {
+  const Subtask3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        spacing: 8,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          MyCard(label: 'Привіт Flutter!', colorStar: Colors.yellow),
+          MyCard(
+            label: 'Привіт Flutter!',
+            color: Colors.lightGreen,
+            colorStar: Colors.yellow,
+          ),
+          MyCard(
+            label: 'Привіт Flutter!',
+            color: Colors.red,
+            colorStar: Colors.yellow,
+          ),
+        ],
+      ),
     );
   }
 }
