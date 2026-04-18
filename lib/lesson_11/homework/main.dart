@@ -159,7 +159,7 @@ class MyClicableCard extends StatefulWidget {
     this.colorStar = Colors.transparent,
     this.mainAlig = MainAxisAlignment.end,
     this.crossAlig = CrossAxisAlignment.end,
-    this.clicable = true,
+    this.isClicable = true,
   });
 
   final Color color;
@@ -167,7 +167,7 @@ class MyClicableCard extends StatefulWidget {
   final Color colorStar;
   final MainAxisAlignment mainAlig;
   final CrossAxisAlignment crossAlig;
-  final bool clicable;
+  final bool isClicable;
 
   @override
   State<MyClicableCard> createState() => _MyClicableCardState();
@@ -190,14 +190,14 @@ class _MyClicableCardState extends State<MyClicableCard> {
 
     return GestureDetector(
       onTapDown: (details) {
-        if (widget.clicable) {
+        if (widget.isClicable) {
           setState(() {
             _isPressed = true;
           });
         }
       },
       onTapUp: (details) {
-        if (widget.clicable) {
+        if (widget.isClicable) {
           setState(() {
             _isPressed = false;
           });
@@ -227,7 +227,11 @@ class _MyClicableCardState extends State<MyClicableCard> {
             Icon(iconType, color: widget.colorStar, size: 24),
             Text(
               widget.label ?? '',
-              style: const TextStyle(fontSize: 24, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             Icon(iconType, color: widget.colorStar, size: 24),
           ],
