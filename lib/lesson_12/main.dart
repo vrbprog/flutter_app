@@ -26,7 +26,9 @@ class GradingPage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         //padding: EdgeInsets.all(16),
-        child: SendingPartOfPage(),
+        child: Column(
+          children: [RatingStars(), DepartmensRatings(), SendingPartOfPage()],
+        ),
       ),
     );
   }
@@ -80,6 +82,40 @@ class SendingPartOfPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class DepartmensRatings extends StatefulWidget {
+  const DepartmensRatings({super.key});
+
+  @override
+  State<DepartmensRatings> createState() => _DepartmensRatingsState();
+}
+
+class _DepartmensRatingsState extends State<DepartmensRatings> {
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Яку оціночку поставите відділам?',
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+class RatingStars extends StatefulWidget {
+  const RatingStars({super.key});
+
+  @override
+  State<RatingStars> createState() => _RatingStarsState();
+}
+
+class _RatingStarsState extends State<RatingStars> {
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Оцінка візиту до магазину:',
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 }
