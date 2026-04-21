@@ -111,11 +111,59 @@ class RatingStars extends StatefulWidget {
 }
 
 class _RatingStarsState extends State<RatingStars> {
+  int _selectedRating = 0;
+
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Оцінка візиту до магазину:',
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Container(
+      margin: EdgeInsets.only(top: 32, bottom: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .1),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        spacing: 16,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Image.asset('assets/leading-icon.png', width: 24, height: 24),
+              const Text(
+                'Оцінка візиту до магазину',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              final isSelected = index < _selectedRating;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedRating = index + 1;
+                  });
+                },
+                child: Image.asset(
+                  isSelected ? 'assets/rating.png' : 'assets/rating_board.png',
+                  width: 48,
+                  height: 48,
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 }
