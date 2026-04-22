@@ -19,15 +19,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class GradingPage extends StatelessWidget {
+class GradingPage extends StatefulWidget {
   const GradingPage({super.key});
+
+  @override
+  State<GradingPage> createState() => _GradingPageState();
+}
+
+class _GradingPageState extends State<GradingPage> {
+  bool _isSettingRating = false;
+  bool get isEnabledSendingData => _isSettingRating;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         //padding: EdgeInsets.all(16),
         child: Column(
-          children: [RatingStars(), DepartmensRatings(), SendingPartOfPage()],
+          children: [
+            RatingStars(
+              onDataChanged: (rating) {
+                setState(() {
+                  _isSettingRating = rating > 0;
+                });
+              },
+            ),
+            DepartmensRatings(),
+            SendingPartOfPage(isEnabled: isEnabledSendingData),
+          ],
         ),
       ),
     );
@@ -35,7 +54,9 @@ class GradingPage extends StatelessWidget {
 }
 
 class SendingPartOfPage extends StatelessWidget {
-  const SendingPartOfPage({super.key});
+  const SendingPartOfPage({super.key, this.isEnabled = false});
+
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +90,16 @@ class SendingPartOfPage extends StatelessWidget {
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
+              onPressed: isEnabled
+                  ? () {
+                      // Implement grading logic here
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1135BA), // Blue700
                 foregroundColor: Colors.white,
                 minimumSize: Size.fromHeight(48),
               ),
-              onPressed: () {
-                // Implement grading logic here
-              },
               child: Text('Надіслати', style: TextStyle(fontSize: 16)),
             ),
           ),
@@ -104,7 +127,9 @@ class _DepartmensRatingsState extends State<DepartmensRatings> {
 }
 
 class RatingStars extends StatefulWidget {
-  const RatingStars({super.key});
+  const RatingStars({required this.onDataChanged, super.key});
+
+  final ValueChanged<int> onDataChanged;
 
   @override
   State<RatingStars> createState() => _RatingStarsState();
@@ -152,6 +177,7 @@ class _RatingStarsState extends State<RatingStars> {
                 onTap: () {
                   setState(() {
                     _selectedRating = index + 1;
+                    widget.onDataChanged(_selectedRating);
                   });
                 },
                 child: Image.asset(
