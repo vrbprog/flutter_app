@@ -119,9 +119,17 @@ class DepartmensRatings extends StatefulWidget {
 class _DepartmensRatingsState extends State<DepartmensRatings> {
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Яку оціночку поставите відділам?',
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Column(
+      spacing: 10,
+      children: [
+        SizedBox(height: 4),
+        const Text(
+          'Яку оціночку поставите відділам?',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4),
+        CardDepartmentRating(),
+      ],
     );
   }
 }
@@ -188,6 +196,91 @@ class _RatingStarsState extends State<RatingStars> {
               );
             }),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class CardDepartmentRating extends StatefulWidget {
+  const CardDepartmentRating({super.key});
+
+  @override
+  State<CardDepartmentRating> createState() => _CardDepartmentRatingState();
+}
+
+class _CardDepartmentRatingState extends State<CardDepartmentRating> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .1),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        spacing: 8,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Випічка',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          RatingType(type: 'Обслуговування'),
+          RatingType(type: 'Асортимент'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Розкажіть докладніше',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RatingType extends StatefulWidget {
+  const RatingType({required this.type, super.key});
+
+  final String type;
+
+  @override
+  State<RatingType> createState() => _RatingTypeState();
+}
+
+class _RatingTypeState extends State<RatingType> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 58,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFFE0E5F1)),
+        borderRadius: BorderRadius.circular(12),
+        color: Color(0xFFF6F8FD),
+      ),
+      child: Row(
+        spacing: 8,
+        children: [
+          //Image.asset('assets/leading-icon.png', width: 16, height: 16),
+          Row(children: [Text(widget.type, style: TextStyle(fontSize: 16))]),
         ],
       ),
     );
