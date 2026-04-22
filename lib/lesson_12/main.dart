@@ -281,10 +281,48 @@ class _RatingTypeState extends State<RatingType> {
       ),
       child: Row(
         spacing: 8,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //Image.asset('assets/leading-icon.png', width: 16, height: 16),
           Row(children: [Text(widget.type, style: TextStyle(fontSize: 16))]),
+          Row(
+            spacing: 12,
+            children: [
+              LikedIcon(name: 'dislike'),
+              LikedIcon(name: 'like'),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class LikedIcon extends StatefulWidget {
+  const LikedIcon({required this.name, super.key});
+
+  final String name;
+
+  @override
+  State<LikedIcon> createState() => _LikedIconState();
+}
+
+class _LikedIconState extends State<LikedIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 40,
+      height: 48,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Color(0xFFEDEFF4),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Image.asset(
+          'assets/${widget.name}.png',
+          //width: 24,
+          //height: 24,
+        ),
       ),
     );
   }

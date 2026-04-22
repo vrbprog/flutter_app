@@ -61,6 +61,8 @@ flutter:
         - assets/rating.png
         - assets/rating_board.png
         - assets/leading-icon.png
+        - assets/like.png
+        - assets/dislike.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/to/resolution-aware-images
