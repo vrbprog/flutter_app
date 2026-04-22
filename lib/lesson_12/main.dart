@@ -85,7 +85,7 @@ class SendingPartOfPage extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 32),
           color: Colors.white, // Grey300
           child: SizedBox(
             width: double.infinity,
@@ -128,7 +128,8 @@ class _DepartmensRatingsState extends State<DepartmensRatings> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        CardDepartmentRating(),
+        CardDepartmentRating(department: 'Випічка'),
+        CardDepartmentRating(department: 'Лавка традицій'),
       ],
     );
   }
@@ -203,7 +204,9 @@ class _RatingStarsState extends State<RatingStars> {
 }
 
 class CardDepartmentRating extends StatefulWidget {
-  const CardDepartmentRating({super.key});
+  const CardDepartmentRating({required this.department, super.key});
+
+  final String department;
 
   @override
   State<CardDepartmentRating> createState() => _CardDepartmentRatingState();
@@ -232,7 +235,7 @@ class _CardDepartmentRatingState extends State<CardDepartmentRating> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Випічка',
+              widget.department,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
