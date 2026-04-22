@@ -63,6 +63,8 @@ flutter:
         - assets/leading-icon.png
         - assets/like.png
         - assets/dislike.png
+        - assets/likeFill.png
+        - assets/dislikeFill.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/to/resolution-aware-images

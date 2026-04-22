@@ -128,8 +128,16 @@ class _DepartmensRatingsState extends State<DepartmensRatings> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        CardDepartmentRating(department: 'Випічка'),
-        CardDepartmentRating(department: 'Лавка традицій'),
+        CardDepartmentRating(
+          department: 'Випічка',
+          isServiceLiked: false,
+          isAssortmentLiked: true,
+        ),
+        CardDepartmentRating(
+          department: 'Лавка традицій',
+          isServiceLiked: true,
+          isAssortmentLiked: false,
+        ),
       ],
     );
   }
@@ -204,9 +212,16 @@ class _RatingStarsState extends State<RatingStars> {
 }
 
 class CardDepartmentRating extends StatefulWidget {
-  const CardDepartmentRating({required this.department, super.key});
+  const CardDepartmentRating({
+    required this.department,
+    this.isServiceLiked = true,
+    this.isAssortmentLiked = false,
+    super.key,
+  });
 
   final String department;
+  final bool isServiceLiked;
+  final bool isAssortmentLiked;
 
   @override
   State<CardDepartmentRating> createState() => _CardDepartmentRatingState();
@@ -239,8 +254,8 @@ class _CardDepartmentRatingState extends State<CardDepartmentRating> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-          RatingType(type: 'Обслуговування'),
-          RatingType(type: 'Асортимент'),
+          RatingType(type: 'Обслуговування', isLiked: widget.isServiceLiked),
+          RatingType(type: 'Асортимент', isLiked: widget.isAssortmentLiked),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -260,7 +275,8 @@ class _CardDepartmentRatingState extends State<CardDepartmentRating> {
 }
 
 class RatingType extends StatefulWidget {
-  const RatingType({required this.type, super.key});
+  const RatingType({required this.type, this.isLiked = true, super.key});
+  final bool isLiked;
 
   final String type;
 
@@ -288,8 +304,8 @@ class _RatingTypeState extends State<RatingType> {
           Row(
             spacing: 12,
             children: [
-              LikedIcon(name: 'dislike'),
-              LikedIcon(name: 'like'),
+              LikedIcon(name: 'dislike', isSelected: !widget.isLiked),
+              LikedIcon(name: 'like', isSelected: widget.isLiked),
             ],
           ),
         ],
@@ -299,9 +315,10 @@ class _RatingTypeState extends State<RatingType> {
 }
 
 class LikedIcon extends StatefulWidget {
-  const LikedIcon({required this.name, super.key});
+  const LikedIcon({required this.name, this.isSelected = false, super.key});
 
   final String name;
+  final bool isSelected;
 
   @override
   State<LikedIcon> createState() => _LikedIconState();
@@ -310,6 +327,7 @@ class LikedIcon extends StatefulWidget {
 class _LikedIconState extends State<LikedIcon> {
   @override
   Widget build(BuildContext context) {
+    final assetName = widget.isSelected ? '${widget.name}Fill' : widget.name;
     return SizedBox(
       width: 40,
       height: 48,
@@ -319,7 +337,7 @@ class _LikedIconState extends State<LikedIcon> {
           borderRadius: BorderRadius.circular(24),
         ),
         child: Image.asset(
-          'assets/${widget.name}.png',
+          'assets/$assetName.png',
           //width: 24,
           //height: 24,
         ),
