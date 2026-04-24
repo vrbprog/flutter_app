@@ -74,7 +74,10 @@ class TrainingExample1 extends StatelessWidget {
       height: 300,
       width: 300,
       color: Colors.green,
-      child: Container(width: 150, height: 150, color: Colors.red),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: Container(width: 150, height: 150, color: Colors.red),
+      ),
     );
   }
 }
@@ -92,7 +95,7 @@ class TrainingExample2 extends StatelessWidget {
     return Row(
       children: [
         Container(width: 100, height: 200, color: Colors.green),
-        Container(width: double.infinity, height: 200, color: Colors.blue),
+        Expanded(child: Container(height: 200, color: Colors.blue)),
       ],
     );
   }
@@ -111,7 +114,8 @@ class TrainingExample3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.yellow,
-      child: Center(
+      child: Align(
+        alignment: Alignment.topRight,
         child: Container(color: Colors.green, width: 100, height: 100),
       ),
     );
@@ -130,10 +134,13 @@ class TrainingExample4 extends StatelessWidget {
   const TrainingExample4({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-
-      child: Container(color: Colors.orange, height: 200, width: 200),
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        color: Colors.green,
+        constraints: const BoxConstraints(maxWidth: 190, maxHeight: 190),
+        child: Container(color: Colors.orange, height: 200, width: 200),
+      ),
     );
   }
 }
@@ -148,15 +155,29 @@ class TrainingExample4 extends StatelessWidget {
 // Чи є різниця, якщо обгорнути контейнери в Padding чи передати параметри
 // margin чи передати padding?
 
+// **************************************************************************
+// Відповідь: розміри синього та червоного контейнерів будуть 132x132
+// та 164x164 відповідно. Різниці між використанням Padding, margin чи padding
+// в Container немає, але обгортання в Padding особисто як для мене займає
+// більше коду та несе зайве смислове навантаження (декоративний віджет який
+// відволікає увагу від основної структури компоновки). Використання margin у
+// дочірніх контейнерах менш читабельно як для мене в порівнянні з padding у
+// батьківських контейнерах.
+// **************************************************************************
+
 class TrainingExample5 extends StatelessWidget {
   const TrainingExample5({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
+    return Center(
       child: Container(
-        color: Colors.blue,
-        child: Container(color: Colors.yellow, height: 100, width: 100),
+        padding: const EdgeInsets.all(16),
+        color: Colors.red,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          color: Colors.blue,
+          child: Container(color: Colors.yellow, height: 100, width: 100),
+        ),
       ),
     );
   }
@@ -174,6 +195,9 @@ class TrainingExample6 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        width: 200,
+        height: 200,
+        alignment: Alignment.center,
         color: Colors.orange,
         child: const Text('Lorem ipsum dolor sit amet, consectetur'),
       ),
@@ -194,9 +218,11 @@ class TrainingExample7 extends StatelessWidget {
     return Column(
       children: [
         Container(color: Colors.orange, height: 100, width: 100),
-        ListView.builder(
-          itemCount: 50,
-          itemBuilder: (context, index) => Text('Item $index'),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 50,
+            itemBuilder: (context, index) => Text('Item $index'),
+          ),
         ),
       ],
     );
@@ -214,7 +240,7 @@ class TrainingExample8 extends StatelessWidget {
     return Column(
       children: [
         Expanded(child: Container(color: Colors.red)),
-        Expanded(child: Container(color: Colors.green)),
+        Expanded(flex: 2, child: Container(color: Colors.green)),
         Expanded(child: Container(color: Colors.blue)),
       ],
     );
@@ -231,7 +257,7 @@ class TrainingExample9 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(child: Container(color: Colors.red, height: 100)),
+        Container(color: Colors.red, height: 100),
         Expanded(child: Container(color: Colors.green)),
       ],
     );
@@ -251,9 +277,11 @@ class TrainingExample10 extends StatelessWidget {
       child: Row(
         children: [
           Container(color: Colors.orange, height: 100, width: 100),
-          ListView.builder(
-            itemCount: 20,
-            itemBuilder: (context, index) => Text('Item $index'),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 20,
+              itemBuilder: (context, index) => Text('Item $index'),
+            ),
           ),
         ],
       ),
@@ -272,7 +300,7 @@ class TrainingExample11 extends StatelessWidget {
     return Center(
       child: Row(
         children: [
-          Expanded(child: Container(color: Colors.red, width: 80, height: 100)),
+          Container(color: Colors.red, width: 80, height: 100),
           Expanded(child: Container(color: Colors.green, height: 100)),
           Expanded(child: Container(color: Colors.blue, height: 100)),
         ],
@@ -300,17 +328,25 @@ class TrainingExample12 extends StatelessWidget {
   Widget build(BuildContext context) {
     const redContainerWidth = 100.0;
 
-    return Row(
-      children: [
-        Container(
-          color: Colors.red,
-          height: 100,
-          width: redContainerWidth,
-          child: const Text('Hi'),
-        ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        final renderWidth = availableWidth < redContainerWidth
+            ? availableWidth
+            : redContainerWidth;
 
-        Expanded(child: Container(color: Colors.green, height: 100)),
-      ],
+        return Row(
+          children: [
+            Container(
+              color: Colors.red,
+              height: 100,
+              width: renderWidth,
+              child: const Text('Hi'),
+            ),
+            Expanded(child: Container(color: Colors.green, height: 100)),
+          ],
+        );
+      },
     );
   }
 }
@@ -329,9 +365,11 @@ class TrainingExample13 extends StatelessWidget {
         width: 200,
         height: 50,
         color: Colors.amber,
-        child: const Text(
-          'Дуже довгий текст який не поміщається',
-          style: TextStyle(fontSize: 30),
+        child: FittedBox(
+          child: const Text(
+            'Дуже довгий текст який не поміщається',
+            style: TextStyle(fontSize: 30),
+          ),
         ),
       ),
     );
@@ -356,6 +394,7 @@ class TrainingExample14 extends StatelessWidget {
         height: 100,
         color: Colors.lightBlue.shade100,
         child: const FittedBox(
+          fit: BoxFit.scaleDown,
           child: Text('Flutter', style: TextStyle(fontSize: 30)),
         ),
       ),
@@ -374,7 +413,10 @@ class TrainingExample15 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(color: Colors.yellow, width: 50, height: 50),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 200, minHeight: 200),
+        child: Container(color: Colors.yellow, width: 50, height: 50),
+      ),
     );
   }
 }
@@ -383,15 +425,16 @@ class TrainingExample15 extends StatelessWidget {
 // Тут просто розберіться - чому не застосовуються constraints ConstrainedBox?
 
 // Запишіть відповідь у коментарі до коду нижче
-// Відповідь: ConstrainedBox не застосовуються, тому що ...
+// Відповідь: ConstrainedBox не застосовуються, тому що батьківський SizedBox
+// має явно задані розміри, які переважають обмеження ConstrainedBox.
 class TrainingExample16 extends StatelessWidget {
   const TrainingExample16({super.key});
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
         child: ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 300, minHeight: 300),
           child: Container(color: Colors.red),
@@ -411,8 +454,9 @@ class TrainingExample17 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
+        Flexible(
           child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 250),
             child: SizedBox(
