@@ -14,8 +14,8 @@ class _GradingPageState extends State<GradingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.white),
       body: SingleChildScrollView(
-        //padding: EdgeInsets.all(16),
         child: Column(
           children: [
             RatingStars(
@@ -67,7 +67,7 @@ class SendingPartOfPage extends StatelessWidget {
         ),
         Container(
           padding: EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 32),
-          color: Colors.white, // Grey300
+          color: Colors.white,
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -77,7 +77,7 @@ class SendingPartOfPage extends StatelessWidget {
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1135BA), // Blue700
+                backgroundColor: const Color(0xFF1135BA),
                 foregroundColor: Colors.white,
                 minimumSize: Size.fromHeight(48),
               ),
@@ -280,13 +280,12 @@ class _RatingTypeState extends State<RatingType> {
         spacing: 8,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          //Image.asset('assets/leading-icon.png', width: 16, height: 16),
           Row(children: [Text(widget.type, style: TextStyle(fontSize: 16))]),
           Row(
             spacing: 12,
             children: [
-              LikedIcon(name: 'dislike', isSelected: !widget.isLiked),
-              LikedIcon(name: 'like', isSelected: widget.isLiked),
+              LikedIcon(name: LikedIcons.dislike, isSelected: !widget.isLiked),
+              LikedIcon(name: LikedIcons.like, isSelected: widget.isLiked),
             ],
           ),
         ],
@@ -295,10 +294,12 @@ class _RatingTypeState extends State<RatingType> {
   }
 }
 
+enum LikedIcons { like, dislike }
+
 class LikedIcon extends StatefulWidget {
   const LikedIcon({required this.name, this.isSelected = false, super.key});
 
-  final String name;
+  final LikedIcons name;
   final bool isSelected;
 
   @override
@@ -308,7 +309,9 @@ class LikedIcon extends StatefulWidget {
 class _LikedIconState extends State<LikedIcon> {
   @override
   Widget build(BuildContext context) {
-    final assetName = widget.isSelected ? '${widget.name}Fill' : widget.name;
+    final assetName = widget.isSelected
+        ? '${widget.name.name}Fill'
+        : widget.name.name;
     return SizedBox(
       width: 40,
       height: 48,
@@ -317,11 +320,7 @@ class _LikedIconState extends State<LikedIcon> {
           color: Color(0xFFEDEFF4),
           borderRadius: BorderRadius.circular(24),
         ),
-        child: Image.asset(
-          'assets/$assetName.png',
-          //width: 24,
-          //height: 24,
-        ),
+        child: Image.asset('assets/$assetName.png'),
       ),
     );
   }
