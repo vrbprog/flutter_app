@@ -78,6 +78,7 @@ class FeatureCard extends StatelessWidget {
           ),
         ),
       ),
+      home: const WidgetConstrainsTrainingScreen(),
     );
   }
 }
