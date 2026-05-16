@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/lesson_12/grading_page.dart';
+import 'package:flutter_app/lesson_13/training.dart';
 
 class WidgetsScreen extends StatelessWidget {
   const WidgetsScreen({super.key});
@@ -25,6 +26,17 @@ class WidgetsScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute<Widget>(
                   builder: (context) => const GradingPage(),
+                ),
+              ),
+            ),
+            NavigationCard(
+              title: 'Home Work 13',
+              description:
+                  'Widget Constraints Training',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<Widget>(
+                  builder: (context) => const WidgetConstrainsTrainingScreen(),
                 ),
               ),
             ),
