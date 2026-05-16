@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/lesson_12/grading_page.dart';
-import 'package:flutter_app/lesson_13/training.dart';
+import 'package:go_router/go_router.dart';
 
 class WidgetsScreen extends StatelessWidget {
   const WidgetsScreen({super.key});
@@ -22,23 +21,12 @@ class WidgetsScreen extends StatelessWidget {
               description:
                   'Container, SizedBox, Padding, Align, Center, Text, Row, '
                   'Column, Expanded, Buttons, Scroll',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<Widget>(
-                  builder: (context) => const GradingPage(),
-                ),
-              ),
+              onTap: () => context.go('/widgets/gradingPage'),
             ),
             NavigationCard(
               title: 'Home Work 13',
-              description:
-                  'Widget Constraints Training',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<Widget>(
-                  builder: (context) => const WidgetConstrainsTrainingScreen(),
-                ),
-              ),
+              description: 'Widget Constraints Training',
+              onTap: () => context.go('/widgets/constraints'),
             ),
           ],
         ),
