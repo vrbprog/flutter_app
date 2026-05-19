@@ -27,6 +27,12 @@ class _BlocCounterState extends State<BlocCounter> {
     });
   }
 
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,9 +42,12 @@ class _BlocCounterState extends State<BlocCounter> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('You have pushed the button this many times:'),
+            Image.asset('assets/bloc.png', width: 200),
+            const SizedBox(height: 16),
+            const Text('You have pushed the buttons this many times:'),
+            const SizedBox(height: 16),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
@@ -46,10 +55,21 @@ class _BlocCounterState extends State<BlocCounter> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            onPressed: _decrementCounter,
+            tooltip: 'Decrement',
+            child: const Icon(Icons.remove),
+          ),
+        ],
       ),
     );
   }

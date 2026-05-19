@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/lesson_18/homework_сubit/counter_cubit.dart';
 import 'package:flutter_app/router/app_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -11,7 +13,10 @@ class FlutterWidgetsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: router);
+    return BlocProvider(
+      create: (context) => CounterCubit(),
+      child: MaterialApp.router(routerConfig: router),
+    );
   }
 }
 

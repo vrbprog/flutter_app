@@ -5,11 +5,13 @@ class StateNavigationCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onTap,
+    required this.counterValue,
     super.key,
   });
 
   final String title;
   final String description;
+  final int counterValue;
   final VoidCallback onTap;
 
   @override
@@ -51,7 +53,7 @@ class StateNavigationCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Counter value: ${DateTime.now().second}',
+                    'Counter value: $counterValue',
                     style: TextStyle(color: Colors.blue.shade700),
                   ),
                   Icon(Icons.arrow_forward, color: Colors.blue.shade700),
