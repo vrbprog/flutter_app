@@ -6,6 +6,7 @@ class StateNavigationCard extends StatelessWidget {
     required this.description,
     required this.onTap,
     required this.counterValue,
+    required this.imagePath,
     super.key,
   });
 
@@ -13,6 +14,7 @@ class StateNavigationCard extends StatelessWidget {
   final String description;
   final int counterValue;
   final VoidCallback onTap;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +45,25 @@ class StateNavigationCard extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
               Text(
                 description,
                 style: const TextStyle(fontSize: 16, color: Colors.black54),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Counter value: $counterValue',
-                    style: TextStyle(color: Colors.blue.shade700),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(imagePath, height: 32),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Counter value: $counterValue',
+                        style: TextStyle(color: Colors.blue.shade700),
+                      ),
+                    ],
                   ),
                   Icon(Icons.arrow_forward, color: Colors.blue.shade700),
                 ],

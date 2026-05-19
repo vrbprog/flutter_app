@@ -24,17 +24,15 @@ class StateManagmentBaseScreen extends StatelessWidget {
               title: 'Cubit State Management',
               description: 'Counter App with Cubit',
               onTap: () => context.go('/state-management/cubitCounter'),
-              counterValue: context
-                  .watch<CounterCubit>()
-                  .state, // Pass the current
+              counterValue: context.watch<CounterCubit>().state,
+              imagePath: 'assets/flutter_cubit_logo.png',
             ),
             StateNavigationCard(
               title: 'Bloc State Management',
               description: 'Counter App with Bloc',
               onTap: () => context.go('/state-management/blocCounter'),
-              counterValue: context
-                  .watch<CounterCubit>()
-                  .state, // Pass the current
+              counterValue: context.watch<CounterCubit>().state,
+              imagePath: 'assets/bloc_logo.png',
             ),
             Image.asset('assets/state_management.png', width: 300),
           ],
