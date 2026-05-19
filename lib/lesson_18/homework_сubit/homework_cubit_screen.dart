@@ -57,12 +57,14 @@ class _CubitCounterState extends State<CubitCounter> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'increment',
             onPressed: () => BlocProvider.of<CounterCubit>(context).increment(),
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
+            heroTag: 'decrement',
             onPressed: () => BlocProvider.of<CounterCubit>(context).decrement(),
             tooltip: 'Decrement',
             child: const Icon(Icons.remove),
