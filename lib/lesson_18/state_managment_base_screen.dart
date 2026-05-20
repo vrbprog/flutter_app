@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/lesson_18/homework_сubit/counter_cubit.dart';
 import 'package:flutter_app/lesson_18/state_navigation_card.dart';
+import 'package:flutter_app/router/router_names.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,14 +24,14 @@ class StateManagmentBaseScreen extends StatelessWidget {
             StateNavigationCard(
               title: 'Cubit State Management',
               description: 'Counter App with Cubit',
-              onTap: () => context.go('/state-management/cubitCounter'),
+              onTap: () => context.goNamed(RouteNames.cubitCounter.name),
               counterValue: context.watch<CounterCubit>().state,
               imagePath: 'assets/flutter_cubit_logo.png',
             ),
             StateNavigationCard(
               title: 'Bloc State Management',
               description: 'Counter App with Bloc',
-              onTap: () => context.go('/state-management/blocCounter'),
+              onTap: () => context.goNamed(RouteNames.blocCounter.name),
               counterValue: context.watch<CounterCubit>().state,
               imagePath: 'assets/bloc_logo.png',
             ),
