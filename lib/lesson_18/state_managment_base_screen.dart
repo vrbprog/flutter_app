@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/lesson_18/homework_bloc/counter_bloc.dart';
 import 'package:flutter_app/lesson_18/homework_сubit/counter_cubit.dart';
 import 'package:flutter_app/lesson_18/state_navigation_card.dart';
 import 'package:flutter_app/router/router_names.dart';
@@ -32,7 +33,7 @@ class StateManagmentBaseScreen extends StatelessWidget {
               title: 'Bloc State Management',
               description: 'Counter App with Bloc',
               onTap: () => context.goNamed(RouteNames.blocCounter.name),
-              counterValue: context.watch<CounterCubit>().state,
+              counterValue: context.watch<CounterBloc>().state,
               imagePath: 'assets/bloc_logo.png',
             ),
             Image.asset('assets/state_management.png', width: 300),
