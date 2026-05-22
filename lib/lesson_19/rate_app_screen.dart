@@ -19,13 +19,15 @@ class _RateAppScreenState extends State<RateAppScreen> {
   int _pulseToken = 0;
   bool _stateSendingRate = false;
   late int _currentRating;
-  late String _comment;
+  late String _currentComment;
 
   @override
   void initState() {
     super.initState();
     _currentRating = context.read<RateAppCubit>().state.rating;
-    _comment = context.read<RateAppCubit>().state.comment;
+    _currentComment = context.read<RateAppCubit>().state.isSendingRate
+        ? context.read<RateAppCubit>().state.comment
+        : 'Add a comment';
   }
 
   void _triggerStarPulse(int starIndex) {
@@ -67,7 +69,7 @@ class _RateAppScreenState extends State<RateAppScreen> {
 
       setState(() {
         _stateSendingRate = false;
-        context.read<RateAppCubit>().rateApp(_currentRating, _comment);
+        context.read<RateAppCubit>().rateApp(_currentRating, _currentComment);
         context.pop();
       });
     });
@@ -159,7 +161,7 @@ class _RateAppScreenState extends State<RateAppScreen> {
                         decoration: InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
-                          labelText: _comment,
+                          labelText: _currentComment,
                           labelStyle: TextStyle(
                             color: widget._baseTextColor,
                             fontWeight: FontWeight.w600,
@@ -184,11 +186,11 @@ class _RateAppScreenState extends State<RateAppScreen> {
                                   context.read<RateAppCubit>().resetRating();
                                   setState(() {
                                     _currentRating = 0;
-                                    _comment = 'Add a comment';
+                                    _currentComment = 'Add a comment';
                                   });
                                 } else {
-                                  _comment = myController.text.isEmpty
-                                      ? 'Add a comment'
+                                  _currentComment = myController.text.isEmpty
+                                      ? ''
                                       : myController.text;
                                   _submitRating();
                                 }
@@ -225,7 +227,7 @@ class _RateAppScreenState extends State<RateAppScreen> {
                                 onPressed: () {
                                   setState(() {
                                     _currentRating = 0;
-                                    _comment = 'Add a comment';
+                                    _currentComment = 'Add a comment';
                                   });
                                   myController.clear();
                                 },
