@@ -69,10 +69,30 @@ class _RateAppScreenState extends State<RateAppScreen> {
 
       setState(() {
         _stateSendingRate = false;
-        context.read<RateAppCubit>().rateApp(_currentRating, _currentComment);
-        context.pop();
       });
+
+      context.read<RateAppCubit>().rateApp(_currentRating, _currentComment);
+      context.pop('Rating submitted successfully');
     });
+  }
+
+  String _getPhoneImage(int rating) {
+    switch (rating) {
+      case 0:
+        return 'assets/phone.png';
+      case 1:
+        return 'assets/phone_1.png';
+      case 2:
+        return 'assets/phone_2.png';
+      case 3:
+        return 'assets/phone_3.png';
+      case 4:
+        return 'assets/phone_4.png';
+      case 5:
+        return 'assets/phone_5.png';
+      default:
+        return 'assets/phone.png';
+    }
   }
 
   @override
@@ -266,9 +286,14 @@ class _RateAppScreenState extends State<RateAppScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Image.asset('assets/phone.png', width: 120)],
+            Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(_getPhoneImage(_currentRating), width: 120),
+                ],
+              ),
             ),
           ],
         ),
