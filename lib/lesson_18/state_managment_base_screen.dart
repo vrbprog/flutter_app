@@ -22,19 +22,27 @@ class StateManagmentBaseScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            StateNavigationCard(
-              title: 'Cubit State Management',
-              description: 'Counter App with Cubit',
-              onTap: () => context.goNamed(RouteNames.cubitCounter.name),
-              counterValue: context.watch<CounterCubit>().state,
-              imagePath: 'assets/flutter_cubit_logo.png',
+            BlocBuilder<CounterCubit, int>(
+              builder: (context, state) {
+                return StateNavigationCard(
+                  title: 'Cubit State Management',
+                  description: 'Counter App with Cubit',
+                  onTap: () => context.goNamed(RouteNames.cubitCounter.name),
+                  counterValue: state,
+                  imagePath: 'assets/flutter_cubit_logo.png',
+                );
+              },
             ),
-            StateNavigationCard(
-              title: 'Bloc State Management',
-              description: 'Counter App with Bloc',
-              onTap: () => context.goNamed(RouteNames.blocCounter.name),
-              counterValue: context.watch<CounterBloc>().state,
-              imagePath: 'assets/bloc_logo.png',
+            BlocBuilder<CounterBloc, int>(
+              builder: (context, state) {
+                return StateNavigationCard(
+                  title: 'Bloc State Management',
+                  description: 'Counter App with Bloc',
+                  onTap: () => context.goNamed(RouteNames.blocCounter.name),
+                  counterValue: state,
+                  imagePath: 'assets/bloc_logo.png',
+                );
+              },
             ),
             Image.asset('assets/state_management.png', width: 300),
           ],

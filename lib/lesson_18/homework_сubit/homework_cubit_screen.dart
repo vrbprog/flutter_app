@@ -7,28 +7,20 @@ class HomeworkCubitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: const CubitCounter(title: 'Cubit Counter App'));
+    return const CubitCounter(title: 'Cubit Counter App');
   }
 }
 
-class CubitCounter extends StatefulWidget {
+class CubitCounter extends StatelessWidget {
   const CubitCounter({required this.title, super.key});
 
   final String title;
   final double _fontSize = 32.0;
 
   @override
-  State<CubitCounter> createState() => _CubitCounterState();
-}
-
-class _CubitCounterState extends State<CubitCounter> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue.shade100,
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(backgroundColor: Colors.blue.shade100, title: Text(title)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +34,7 @@ class _CubitCounterState extends State<CubitCounter> {
                 return AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
                   style: TextStyle(
-                    fontSize: widget._fontSize + state.toDouble(),
+                    fontSize: _fontSize + state.toDouble(),
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                   ),

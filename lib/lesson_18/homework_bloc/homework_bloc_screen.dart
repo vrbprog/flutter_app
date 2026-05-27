@@ -7,7 +7,7 @@ class HomeworkBlocScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: const BlocCounter(title: 'Bloc Counter App'));
+    return const BlocCounter(title: 'Bloc Counter App');
   }
 }
 
