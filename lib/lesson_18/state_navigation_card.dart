@@ -1,52 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/router/router_names.dart';
-import 'package:go_router/go_router.dart';
 
-class WidgetsScreen extends StatelessWidget {
-  const WidgetsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Widgets'),
-        backgroundColor: Colors.blue.shade100,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            NavigationCard(
-              title: 'Home Work 12',
-              description:
-                  'Container, SizedBox, Padding, Align, Center, Text, Row, '
-                  'Column, Expanded, Buttons, Scroll',
-              onTap: () => context.goNamed(RouteNames.gradingPage.name),
-            ),
-            NavigationCard(
-              title: 'Home Work 13',
-              description: 'Widget Constraints Training',
-              onTap: () => context.goNamed(RouteNames.constraints.name),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NavigationCard extends StatelessWidget {
-  const NavigationCard({
+class StateNavigationCard extends StatelessWidget {
+  const StateNavigationCard({
     required this.title,
     required this.description,
     required this.onTap,
+    required this.counterValue,
+    required this.imagePath,
     super.key,
   });
 
   final String title;
   final String description;
+  final int counterValue;
   final VoidCallback onTap;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -77,15 +45,26 @@ class NavigationCard extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
               Text(
                 description,
                 style: const TextStyle(fontSize: 16, color: Colors.black54),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(imagePath, height: 32),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Counter value: $counterValue',
+                        style: TextStyle(color: Colors.blue.shade700),
+                      ),
+                    ],
+                  ),
                   Icon(Icons.arrow_forward, color: Colors.blue.shade700),
                 ],
               ),
