@@ -106,7 +106,6 @@ class _RateAppScreenState extends State<RateAppScreen> {
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        //padding: const EdgeInsets.only(top: 16.0),
         child: Stack(
           children: [
             Container(
