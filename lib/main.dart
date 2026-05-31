@@ -56,12 +56,6 @@ class HomeScreen extends StatelessWidget {
                 final result = await context.pushNamed(
                   RouteNames.rateScreen.name,
                 );
-
-                if (result is String && context.mounted) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(_createSnackBar(context, result));
-                }
               },
             ),
           ],
@@ -69,28 +63,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-SnackBar _createSnackBar(BuildContext context, String result) {
-  return SnackBar(
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.star, color: Colors.white),
-        const SizedBox(width: 12),
-        Text(result, style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 12),
-        const Icon(Icons.star, color: Colors.white),
-      ],
-    ),
-    behavior: SnackBarBehavior.floating,
-    duration: const Duration(seconds: 4),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(6)),
-    ),
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    dismissDirection: DismissDirection.none,
-  );
 }
 
 class FeatureCard extends StatelessWidget {

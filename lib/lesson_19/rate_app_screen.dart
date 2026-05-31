@@ -6,74 +6,292 @@ import 'package:go_router/go_router.dart';
 class RateAppScreen extends StatefulWidget {
   const RateAppScreen({super.key});
 
-  final Color _baseTextColor = const Color(0xFF1B3D70);
-
   @override
   State<RateAppScreen> createState() => _RateAppScreenState();
 }
 
 class _RateAppScreenState extends State<RateAppScreen> {
-  final myController = TextEditingController();
-  int? _animatedStarIndex;
-  bool _isScaledUp = false;
-  int _pulseToken = 0;
-  bool _stateSendingRate = false;
-  late int _currentRating;
-  late String _currentComment;
+  static const Color _baseTextColor = Color(0xFF1B3D70);
+  late final RateAppCubit _rateAppCubit;
+  late final TextEditingController _commentController;
 
   @override
   void initState() {
     super.initState();
-    _currentRating = context.read<RateAppCubit>().state.rating;
-    _currentComment = context.read<RateAppCubit>().state.isSendingRate
-        ? context.read<RateAppCubit>().state.comment
-        : 'Add a comment';
+    _rateAppCubit = context.read<RateAppCubit>();
+    final initialComment = _rateAppCubit.state.comment;
+    _commentController = TextEditingController(text: initialComment);
   }
 
-  void _triggerStarPulse(int starIndex) {
-    final currentToken = ++_pulseToken;
-
-    setState(() {
-      _animatedStarIndex = starIndex;
-      _isScaledUp = true;
-    });
-
-    Future<void>.delayed(const Duration(milliseconds: 200), () {
-      if (!mounted || currentToken != _pulseToken) {
-        return;
-      }
-
-      setState(() {
-        _isScaledUp = false;
-      });
-    });
-
-    Future<void>.delayed(const Duration(milliseconds: 400), () {
-      if (!mounted || currentToken != _pulseToken) {
-        return;
-      }
-
-      setState(() {
-        _animatedStarIndex = null;
-      });
-    });
+  @override
+  void dispose() {
+    final isSubmitted = _rateAppCubit.state.state == RateAppActionState.success;
+    if (!isSubmitted) {
+      _rateAppCubit.resetRating();
+    }
+    _commentController.dispose();
+    super.dispose();
   }
 
-  void _submitRating() {
-    setState(() {
-      _stateSendingRate = true;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RateAppCubit, RateAppState>(
+          listenWhen: (previous, current) {
+            return previous.state == RateAppActionState.loading &&
+                current.state == RateAppActionState.success;
+          },
+          listener: (context, state) {
+            context.pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              _createSnackBar(
+                context,
+                'Rating submitted successfully ${state.rating} stars',
+              ),
+            );
+          },
+        ),
+        BlocListener<RateAppCubit, RateAppState>(
+          listenWhen: (previous, current) {
+            return previous.comment != current.comment;
+          },
+          listener: (context, state) {
+            _commentController.value = TextEditingValue(text: state.comment);
+          },
+        ),
+      ],
+      child: BlocBuilder<RateAppCubit, RateAppState>(
+        builder: (context, state) {
+          final isSended = state.state == RateAppActionState.success;
+          return Scaffold(
+            backgroundColor: const Color(0xFF9AD1EF),
+            appBar: AppBar(
+              title: const Text('Rate App'),
+              centerTitle: true,
+              backgroundColor: const Color(0xFF1B3D70),
+              foregroundColor: Colors.white,
+            ),
+            body: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 130),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 32,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF72C1FA),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: .2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 20),
+                        Column(
+                          spacing: 24,
+                          children: [
+                            Text(
+                              isSended
+                                  ? 'You rated the app'
+                                  : 'How would you rate the app?',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: _baseTextColor,
+                              ),
+                            ),
+                            Row(
+                              spacing: 20,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(5, (index) {
+                                final starIndex = index + 1;
+                                final isAnimating =
+                                    state.animatedStarIndex == starIndex;
 
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
-
-      setState(() {
-        _stateSendingRate = false;
-      });
-
-      context.read<RateAppCubit>().rateApp(_currentRating, _currentComment);
-      context.pop('Rating submitted successfully');
-    });
+                                return GestureDetector(
+                                  onTap: isSended
+                                      ? null
+                                      : () {
+                                          context
+                                              .read<RateAppCubit>()
+                                              .onStarTapped(starIndex);
+                                        },
+                                  child: AnimatedScale(
+                                    scale: isAnimating && state.isScaledUp
+                                        ? 1.5
+                                        : 1,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeOut,
+                                    child: Image.asset(
+                                      starIndex <= state.rating
+                                          ? 'assets/fillStar.png'
+                                          : 'assets/star.png',
+                                      width: 32,
+                                      height: 32,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                            TextFormField(
+                              controller: _commentController,
+                              enabled: !isSended,
+                              onChanged: context
+                                  .read<RateAppCubit>()
+                                  .updateComment,
+                              style: const TextStyle(
+                                color: _baseTextColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Add a comment',
+                                labelStyle: const TextStyle(
+                                  color: _baseTextColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                alignLabelWithHint: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              spacing: 8,
+                              children: [
+                                if (isSended)
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: context
+                                          .read<RateAppCubit>()
+                                          .resetRating,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: _baseTextColor,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 18,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Rate Again',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                if (!isSended)
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: context
+                                          .read<RateAppCubit>()
+                                          .submitRating,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: _baseTextColor,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 18,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child:
+                                          state.state ==
+                                              RateAppActionState.loading
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              'Submit Rating',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                if (!isSended)
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed:
+                                          state.state ==
+                                              RateAppActionState.loading
+                                          ? null
+                                          : () {
+                                              context
+                                                  .read<RateAppCubit>()
+                                                  .resetRating();
+                                            },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF41A6F4,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 18,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Reset Rating',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(_getPhoneImage(state.rating), width: 120),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   String _getPhoneImage(int rating) {
@@ -94,209 +312,26 @@ class _RateAppScreenState extends State<RateAppScreen> {
         return 'assets/phone.png';
     }
   }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF9AD1EF),
-      appBar: AppBar(
-        title: const Text('Rate App'),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF1B3D70),
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 130),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-              decoration: BoxDecoration(
-                color: const Color(0xFF72C1FA),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: .2),
-                    blurRadius: 4,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  BlocBuilder<RateAppCubit, RateAppState>(
-                    builder: (context, state) {
-                      final isSended = state.isSendingRate;
-                      return Column(
-                        spacing: 24,
-                        children: [
-                          Text(
-                            isSended
-                                ? 'You rated the app'
-                                : 'How would you rate the app?',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: widget._baseTextColor,
-                            ),
-                          ),
-                          Row(
-                            spacing: 20,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(5, (index) {
-                              final starIndex = index + 1;
-                              final isAnimating =
-                                  _animatedStarIndex == starIndex;
-                              return GestureDetector(
-                                onTap: () {
-                                  if (!isSended) {
-                                    _triggerStarPulse(starIndex);
-                                    setState(() {
-                                      _currentRating = starIndex;
-                                    });
-                                  }
-                                },
-                                child: AnimatedScale(
-                                  scale: isAnimating && _isScaledUp ? 1.5 : 1,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeOut,
-                                  child: Image.asset(
-                                    starIndex <= _currentRating
-                                        ? 'assets/fillStar.png'
-                                        : 'assets/star.png',
-                                    width: 32,
-                                    height: 32,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                          TextField(
-                            controller: myController,
-                            enabled: !isSended,
-                            style: TextStyle(
-                              color: widget._baseTextColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              filled: true,
-                              labelText: _currentComment,
-                              labelStyle: TextStyle(
-                                color: widget._baseTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              alignLabelWithHint: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            spacing: 8,
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (isSended) {
-                                      context
-                                          .read<RateAppCubit>()
-                                          .resetRating();
-                                      setState(() {
-                                        _currentRating = 0;
-                                        _currentComment = 'Add a comment';
-                                      });
-                                    } else {
-                                      _currentComment =
-                                          myController.text.isEmpty
-                                          ? ''
-                                          : myController.text;
-                                      _submitRating();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: widget._baseTextColor,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30,
-                                      vertical: 18,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: _stateSendingRate
-                                      ? SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child:
-                                              const CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color: Colors.white,
-                                              ),
-                                        )
-                                      : Text(
-                                          isSended
-                                              ? 'Rate Again'
-                                              : 'Submit Rating',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                ),
-                              ),
-                              if (!isSended)
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _currentRating = 0;
-                                        _currentComment = 'Add a comment';
-                                      });
-                                      myController.clear();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF41A6F4),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 30,
-                                        vertical: 18,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      'Reset Rating',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(_getPhoneImage(_currentRating), width: 120),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+SnackBar _createSnackBar(BuildContext context, String result) {
+  return SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.star, color: Colors.white),
+        const SizedBox(width: 12),
+        Text(result, style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 12),
+        const Icon(Icons.star, color: Colors.white),
+      ],
+    ),
+    behavior: SnackBarBehavior.floating,
+    duration: const Duration(seconds: 4),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(6)),
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    dismissDirection: DismissDirection.none,
+  );
 }
