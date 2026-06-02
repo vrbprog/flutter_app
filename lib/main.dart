@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/lesson_18/homework_bloc/counter_bloc.dart';
 import 'package:flutter_app/lesson_18/homework_сubit/counter_cubit.dart';
+import 'package:flutter_app/lesson_19/rate_app_cubit.dart';
 import 'package:flutter_app/router/app_router.dart';
 import 'package:flutter_app/router/router_names.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ class FlutterWidgetsApp extends StatelessWidget {
       providers: [
         BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
         BlocProvider<CounterBloc>(create: (context) => CounterBloc()),
+        BlocProvider<RateAppCubit>(create: (context) => RateAppCubit()),
       ],
       child: MaterialApp.router(routerConfig: router),
     );
@@ -47,6 +49,14 @@ class HomeScreen extends StatelessWidget {
             FeatureCard(
               title: 'State management',
               onTap: () => context.goNamed(RouteNames.stateManagement.name),
+            ),
+            FeatureCard(
+              title: 'HW-19  Rate screen',
+              onTap: () async {
+                final result = await context.pushNamed(
+                  RouteNames.rateScreen.name,
+                );
+              },
             ),
           ],
         ),

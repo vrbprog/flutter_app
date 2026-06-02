@@ -3,6 +3,7 @@ import 'package:flutter_app/lesson_13/training.dart';
 import 'package:flutter_app/lesson_18/homework_bloc/homework_bloc_screen.dart';
 import 'package:flutter_app/lesson_18/homework_сubit/homework_cubit_screen.dart';
 import 'package:flutter_app/lesson_18/state_managment_base_screen.dart';
+import 'package:flutter_app/lesson_19/rate_app_screen.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/router/router_names.dart';
 import 'package:flutter_app/widgets_main_screen.dart';
@@ -49,6 +50,11 @@ final router = GoRouter(
               builder: (context, state) => const HomeworkBlocScreen(),
             ),
           ],
+        ),
+        GoRoute(
+          path: 'rateScreen',
+          name: RouteNames.rateScreen.name,
+          builder: (context, state) => const RateAppScreen(),
         ),
       ],
     ),

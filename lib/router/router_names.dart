@@ -5,4 +5,5 @@ enum RouteNames {
   stateManagement,
   cubitCounter,
   blocCounter,
+  rateScreen,
 }
