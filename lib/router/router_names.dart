@@ -6,4 +6,5 @@ enum RouteNames {
   cubitCounter,
   blocCounter,
   rateScreen,
+  explicitAnimations,
 }

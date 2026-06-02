@@ -58,6 +58,10 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
+            FeatureCard(
+              title: 'HW-21  Explicit Animations',
+              onTap: () => context.goNamed(RouteNames.explicitAnimations.name),
+            ),
           ],
         ),
       ),
