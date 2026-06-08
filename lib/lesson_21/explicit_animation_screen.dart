@@ -16,19 +16,8 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
   late Animation<AlignmentGeometry> _activeAlignment;
   bool _isDownPhase = false;
 
-  late final Animation<AlignmentGeometry> _animationAlignUp =
-      Tween<AlignmentGeometry>(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      ).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
-      );
-
-  late final Animation<AlignmentGeometry> _animationAlignDown =
-      Tween<AlignmentGeometry>(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ).animate(CurvedAnimation(parent: _controller, curve: Curves.bounceOut));
+  late final Animation<AlignmentGeometry> _animationAlignUp;
+  late final Animation<AlignmentGeometry> _animationAlignDown;
 
   void _onAnimationStatusChanged(AnimationStatus status) {
     if (!mounted || status != AnimationStatus.completed) {
@@ -63,10 +52,24 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(vsync: this, duration: duration);
-    _activeAlignment = _animationAlignUp;
     _controller.addStatusListener(_onAnimationStatusChanged);
 
+    _animationAlignUp =
+        Tween<AlignmentGeometry>(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+        ).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        );
+
+    _animationAlignDown = Tween<AlignmentGeometry>(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.bounceOut));
+
+    _activeAlignment = _animationAlignUp;
     _controller.forward();
   }
 
@@ -82,11 +85,10 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     return Scaffold(
       appBar: AppBar(title: const Text('Explicit Animations')),
       body: Container(
-        constraints: const BoxConstraints.expand(), // Fill the entire screen
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/goal.png'),
-            fit: BoxFit.cover, // Ensures the image fills the screen
+            fit: BoxFit.cover,
           ),
         ),
         child: AlignTransition(
