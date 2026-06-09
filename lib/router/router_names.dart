@@ -7,4 +7,5 @@ enum RouteNames {
   blocCounter,
   rateScreen,
   explicitAnimations,
+  errorHandling,
 }

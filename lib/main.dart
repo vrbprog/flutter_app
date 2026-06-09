@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/lesson_18/homework_bloc/counter_bloc.dart';
 import 'package:flutter_app/lesson_18/homework_сubit/counter_cubit.dart';
 import 'package:flutter_app/lesson_19/rate_app_cubit.dart';
+import 'package:flutter_app/lesson_22/data/repository/fake_user_repository.dart';
+import 'package:flutter_app/lesson_22/presentation/cubit/user_profile_cubit.dart';
 import 'package:flutter_app/router/app_router.dart';
 import 'package:flutter_app/router/router_names.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,9 @@ class FlutterWidgetsApp extends StatelessWidget {
         BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
         BlocProvider<CounterBloc>(create: (context) => CounterBloc()),
         BlocProvider<RateAppCubit>(create: (context) => RateAppCubit()),
+        BlocProvider<UserProfileCubit>(
+          create: (context) => UserProfileCubit(FakeUserRepository()),
+        ),
       ],
       child: MaterialApp.router(routerConfig: router),
     );
@@ -61,6 +66,10 @@ class HomeScreen extends StatelessWidget {
             FeatureCard(
               title: 'HW-21  Explicit Animations',
               onTap: () => context.goNamed(RouteNames.explicitAnimations.name),
+            ),
+            FeatureCard(
+              title: 'HW-22  Error Handling',
+              onTap: () => context.goNamed(RouteNames.errorHandling.name),
             ),
           ],
         ),
